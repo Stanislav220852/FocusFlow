@@ -3,7 +3,7 @@ from pydantic import Field
 
 
 class Settings(BaseSettings):
-    PEOJECT_NAME:str = "FocusFlow"
+    PROJECT_NAME:str = "FocusFlow"
     VERSION:str = "0.1.0"
     
     SECRET_KEY:str 

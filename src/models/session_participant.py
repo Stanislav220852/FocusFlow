@@ -3,11 +3,14 @@ from datetime import datetime
 from typing import List, Optional
 from sqlalchemy import DateTime, ForeignKey, String, Integer, Boolean, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.focus_session import FocusSession
-from models.user import User
 from src.db.database import Base  
 from uuid import UUID
+from typing import TYPE_CHECKING
 
+
+if TYPE_CHECKING:
+    from src.models.user import User
+    from src.models.focus_session import FocusSession
 
 class SessionParticipant(Base):
     __tablename__ = "session_participants"
