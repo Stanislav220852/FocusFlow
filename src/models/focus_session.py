@@ -1,0 +1,19 @@
+import uuid
+from datetime import datetime
+from typing import List, Optional
+from sqlalchemy import DateTime, ForeignKey, String, Integer, Boolean, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from src.db.database import Base  
+from uuid import UUID
+
+
+class FocusSession(Base):
+    __tablename__ = "focus_sessions"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    room_id: Mapped[UUID] = mapped_column(ForeignKey("rooms.id", ondelete="CASCADE"), nullable=False)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    is_completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    room: Mapped["Room"] = relationship(back_populates="sessions")
+    participants: Mapped[List["SessionParticipant"]] = relationship(back_populates="session")
