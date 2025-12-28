@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import List, Optional
 from sqlalchemy import DateTime, ForeignKey, String, Integer, Boolean, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from models.room import Room
+from models.session_participant import SessionParticipant
 from src.db.database import Base  
 from uuid import UUID
 
