@@ -23,8 +23,14 @@ async def register_user(
     result = await db.execute(query)
     if result.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Email already registered")
+    
+    query2 = select(User).where(User.username == user_data.username)
+    result = await db.execute(query2)
+    if result.scalar_one_or_none():
+        raise HTTPException(status_code=400, detail="Name already registered")
 
     new_user = User(
+        username= user_data.username,
         email=user_data.email,
         hashed_password=hash_password(user_data.password) 
     )
@@ -41,12 +47,12 @@ async def login(
     db: AsyncSession = Depends(get_db)
 ):
    
-    query = select(User).where(User.email == form_data.username)
+    query = select(User).where(User.username == form_data.username)
     result = await db.execute(query)
     user = result.scalar_one_or_none()
    
     if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail="Invalid name or password")
 
     
     access_token = create_access_token(data={"sub": user.email})

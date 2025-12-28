@@ -1,3 +1,4 @@
+import uuid
 from fastapi import APIRouter,Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
@@ -28,8 +29,11 @@ async def create_room(
         description = data.description,
         work_duration = data.work_duration,
         break_duration = data.break_duration,
-        is_private = data.is_private
+        is_private = data.is_private,
+        creator_id= current_user.id 
     )
+    if data.is_private:
+            new_room.invite_code = uuid.uuid4().hex[:8].upper()
     
     db.add(new_room)
     await db.commit()
