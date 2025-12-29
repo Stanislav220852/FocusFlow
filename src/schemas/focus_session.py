@@ -1,14 +1,16 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict
 from uuid import UUID
+from datetime import datetime
 
+class FocusSessionCreate(BaseModel):
+    room_id: UUID
+    duration_minutes: int = Field(25, ge=5, le=240, description="Длительность от 5 до 240 минут")
 
-
-
-
-
-
-class ParticipantRead(BaseModel):
-    user_id: UUID
-    earned_xp: int
+class FocusSessionRead(BaseModel):
+    id: int
+    room_id: UUID
+    start_time: datetime
+    duration_minutes: int
+    is_active: bool
 
     model_config = ConfigDict(from_attributes=True)
