@@ -19,5 +19,5 @@ async def close_redis():
         await redis_client.close()
 
 # Зависимость для эндпоинтов
-async def get_redis():
+async def get_redis() -> redis.Redis:
     return redis_client

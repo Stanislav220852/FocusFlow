@@ -6,6 +6,7 @@ from src.schemas.user import UserCreate, UserRead
 from src.api.dependencies import get_current_user
 from fastapi.security import OAuth2PasswordRequestForm 
 from src.services.user_services import UserService
+from src.api.dependencies import DBSessionDep
 
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -14,15 +15,16 @@ user_router = APIRouter(prefix="/users", tags=["Users"])
 @user_router.post("/register", response_model=UserRead)
 async def register_user(
     user_data: UserCreate, 
-    db: AsyncSession = Depends(get_db)
+    db: DBSessionDep
 ):
     
     return await UserService.register_new_user(db, user_data)
 
 @user_router.post("/login")
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(), 
-    db: AsyncSession = Depends(get_db)
+    db: DBSessionDep,
+    form_data: OAuth2PasswordRequestForm = Depends()
+    
 ):
    
    return  await UserService.authenticate_user(db,form_data.username,form_data.password)

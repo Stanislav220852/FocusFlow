@@ -3,7 +3,8 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-
+from src.db.redis import get_redis
+import redis.asyncio as redis
 from src.db.database import get_db
 from src.models.user import User
 from src.core.config import settings
@@ -13,6 +14,7 @@ from src.core.security import oauth2_scheme
 
 DBSessionDep = Annotated[AsyncSession, Depends(get_db)]
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
+RedisDep = Annotated[redis.Redis,Depends(get_redis)]
 
 
 CREDENTIALS_EXCEPTION = HTTPException(
