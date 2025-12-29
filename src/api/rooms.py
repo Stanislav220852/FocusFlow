@@ -1,5 +1,4 @@
 from typing import List
-import uuid
 from fastapi import APIRouter,Depends,Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
@@ -9,6 +8,8 @@ from src.models.user import User
 from src.api.dependencies import get_current_user
 from src.services.room_services import RoomService
 from uuid import UUID
+from src.db.redis import get_redis
+import redis.asyncio as redis
     
     
     
@@ -35,6 +36,14 @@ async def list_rooms(
 ):
     return await RoomService.list_rooms(db, limit, offset)
 
+@room_router.get("/test-redis")
+async def test_redis(cache: redis.Redis = Depends(get_redis)):
+    # Устанавливаем значение на 60 секунд
+    await cache.set("last_visit", "now", ex=60)
+    
+    val = await cache.get("last_visit")
+    return {"message": f"Value in redis is: {val}"}
+
 @room_router.get("/{room_id}", response_model=RoomRead)
 async def get_room(room_id: UUID, db: AsyncSession = Depends(get_db)):
     return await RoomService.get_room_by_id(db, room_id)
@@ -48,3 +57,5 @@ async def delete_room(
     current_user: User = Depends(get_current_user)
 ):
     return await RoomService.delete_room(db, room_id, current_user.id)
+
+

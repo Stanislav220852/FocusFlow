@@ -27,7 +27,17 @@ services:
       - db
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    
+  redis:
+    image: redis:7-alpine
+    container_name: focus_flow_redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
   pgadmin_data:
+  redis_data:
