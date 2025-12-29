@@ -39,8 +39,7 @@ async def health_check():
     return {
         "status": "ok",
         "project": settings.PROJECT_NAME,
-        "version": settings.VERSION,
-        "debug_mode": settings.DEBUG
+        "version": settings.VERSION
     }
 
 if __name__ == "__main__":
