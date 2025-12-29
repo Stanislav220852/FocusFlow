@@ -20,4 +20,6 @@ async def close_redis():
 
 # Зависимость для эндпоинтов
 async def get_redis() -> redis.Redis:
+    if redis_client is None:
+        raise ConnectionError("Redis client is not initialized. Check lifespan in main.py")
     return redis_client
