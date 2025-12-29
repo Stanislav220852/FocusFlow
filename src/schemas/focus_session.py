@@ -7,9 +7,9 @@ class FocusSessionCreate(BaseModel):
     duration_minutes: int = Field(25, ge=5, le=240, description="Длительность от 5 до 240 минут")
 
 class FocusSessionRead(BaseModel):
-    id: int
+    id: UUID
     room_id: UUID
-    start_time: datetime
+    started_at: datetime
     duration_minutes: int
     is_active: bool
 

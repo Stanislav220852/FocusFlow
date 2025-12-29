@@ -7,6 +7,7 @@ from src.api.dependencies import get_current_user
 from src.models.user import User
 from contextlib import asynccontextmanager
 from src.db.redis import init_redis, close_redis
+from src.api.focus_session import focus_router
 
 
 @asynccontextmanager
@@ -26,7 +27,7 @@ app = FastAPI(
 
 app.include_router(user_router)
 app.include_router(room_router)
-
+app.include_router(focus_router)
 
 @app.get("/healthcheck")
 async def health_check(current_user: User = Depends(get_current_user)):
