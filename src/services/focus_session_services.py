@@ -7,14 +7,15 @@ from src.models.room import Room
 from src.services.room_services import RoomService
 from uuid import UUID
 from src.models.session_participant import SessionParticipant
+from src.api.dependencies import RedisDep
 
 
 
 class FocusSessionService:
     @staticmethod
-    async def start_session(db: AsyncSession, data: FocusSessionCreate, user_id: int,room_id: UUID):
+    async def start_session(data: FocusSessionCreate,db: AsyncSession,  cache: RedisDep, user_id: int):
         
-        room = await RoomService.get_room_by_id(db, room_id)
+        room = await RoomService.get_room_by_id(db, data.room_id)
         if not room or room.creator_id != user_id:
             raise HTTPException(status_code=403, detail="Только владелец может запустить фокус")
 
@@ -31,6 +32,9 @@ class FocusSessionService:
         db.add(new_session)
         await db.commit()
         await db.refresh(new_session)
+        
+        redis_key = f"session:{new_session.id}:timer"
+        await cache.set(redis_key, "active", ex=data.duration_minutes * 60)
         return new_session
     
     
