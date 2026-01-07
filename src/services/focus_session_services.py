@@ -26,7 +26,7 @@ class FocusSessionService:
         existing = await db.execute(query)
         if existing.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Сессия в этой комнате уже идет")
-
+            
        
         new_session = FocusSession(**data.model_dump())
         db.add(new_session)
