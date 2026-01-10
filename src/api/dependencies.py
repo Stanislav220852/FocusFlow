@@ -51,3 +51,5 @@ async def get_current_user(token: TokenDep, db: DBSessionDep) -> User:
 
 
 CurrentUserDep = Annotated[User, Depends(get_current_user)]
+
+

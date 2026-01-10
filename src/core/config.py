@@ -28,6 +28,8 @@ class Settings(BaseSettings):
         
     REDIS_HOST: str
     REDIS_PORT: int
+    USER_ADMIN:str
+    USER_ADMIN_PASSWORD:int
 
     @property
     def REDIS_URL(self) -> str:

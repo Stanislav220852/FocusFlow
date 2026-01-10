@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from fastapi import HTTPException, Depends,status
 from src.models.user import User
-from src.core.security import hash_password, verify_password, create_access_token
 from src.schemas.room import RoomCreate
 from src.models.room import Room
 from src.api.dependencies import get_current_user

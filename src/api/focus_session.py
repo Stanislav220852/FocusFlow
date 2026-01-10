@@ -10,7 +10,7 @@ from src.api.dependencies import DBSessionDep,CurrentUserDep,RedisDep
 
 focus_router = APIRouter(prefix="/sessions", tags=["Sessions"])
 
-@focus_router.post("/", response_model=FocusSessionRead)
+@focus_router.post("/start", response_model=FocusSessionRead)
 async def start_session(
     data: FocusSessionCreate, 
     db: DBSessionDep, 

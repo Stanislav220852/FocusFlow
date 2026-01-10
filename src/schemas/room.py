@@ -3,7 +3,6 @@ from uuid import UUID
 from datetime import datetime
 from typing import Optional
 
-# --- СХЕМЫ ДЛЯ КОМНАТ ---
 
 class RoomCreate(BaseModel):
     name: str = Field(..., min_length=3, max_length=50, pattern=r"^[a-zA-Zа-яА-Я0-9\s\-_]+$")
