@@ -45,4 +45,29 @@ class UserService:
     
         access_token = create_access_token(data={"sub": user.email})
         return {"access_token": access_token, "token_type": "bearer"}
+
+    
+    @staticmethod
+    async def list_users(db:AsyncSession,limit:int = 20 ,offset:int = 0):
+        query = (
+            select(User)
+            .limit(limit)
+            .offset(offset)
+        )
+        result = await db.execute(query)
+        return result.scalars().all()
+
+    
+    @staticmethod
+    async def get_user_by_id(db: AsyncSession, user_id: UUID):
         
+        query = select(User).where(User.id == user_id)
+        result = await db.execute(query)
+        user = result.scalar_one_or_none()
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        return user

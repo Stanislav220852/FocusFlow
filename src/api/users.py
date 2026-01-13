@@ -6,7 +6,7 @@ from src.schemas.user import UserCreate, UserRead,UserDelete
 from src.api.dependencies import get_current_user
 from fastapi.security import OAuth2PasswordRequestForm 
 from src.services.user_services import UserService
-from src.api.dependencies import DBSessionDep
+from src.api.dependencies import DBSessionDep,CurrentUserDep
 
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
@@ -33,4 +33,20 @@ async def login(
 @user_router.get("/me", response_model=UserRead)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@user_router.get("/list_user",response_model=List[UserRead])
+async def list_user(
+    db: DBSessionDep,
+    limit: int = Query(20, ge=1, le=100),
+    offset: int = Query(0, ge=0)
+):
+    return await UserService.list_user(db, limit, offset)
+
+@user_router.get("/{user_id}",response_model=UserRead)
+async def get_user(
+    db:DBSessionDep,
+    user_id:UUID
+):
+    return await UserService.get_user_by_id(db,user_id)
+
 

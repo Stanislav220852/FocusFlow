@@ -25,3 +25,5 @@ class User(Base):
     # Relationships
     created_rooms: Mapped[List["Room"]] = relationship(back_populates="creator")
     session_history: Mapped[List["SessionParticipant"]] = relationship(back_populates="user")
+
+

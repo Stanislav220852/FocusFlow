@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     REDIS_HOST: str
     REDIS_PORT: int
     USER_ADMIN:str
-    USER_ADMIN_PASSWORD:int
-
+    USER_ADMIN_PASSWORD:int             
+    
     @property
     def REDIS_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
