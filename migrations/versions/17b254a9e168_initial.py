@@ -1,8 +1,8 @@
-"""Initial migration
+"""Initial
 
-Revision ID: 168edb5249e1
+Revision ID: 17b254a9e168
 Revises: 
-Create Date: 2025-12-28 18:03:57.035819
+Create Date: 2026-01-16 18:14:04.233473
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '168edb5249e1'
+revision: str = '17b254a9e168'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,9 +30,9 @@ def upgrade() -> None:
     sa.Column('level', sa.Integer(), nullable=False),
     sa.Column('total_minutes_focused', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('username')
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_users')),
+    sa.UniqueConstraint('email', name=op.f('uq_users_email')),
+    sa.UniqueConstraint('username', name=op.f('uq_users_username'))
     )
     op.create_table('rooms',
     sa.Column('id', sa.Uuid(), nullable=False),
@@ -44,27 +44,29 @@ def upgrade() -> None:
     sa.Column('is_private', sa.Boolean(), nullable=False),
     sa.Column('invite_code', sa.String(length=10), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.ForeignKeyConstraint(['creator_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('invite_code')
+    sa.ForeignKeyConstraint(['creator_id'], ['users.id'], name=op.f('fk_rooms_creator_id_users'), ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_rooms')),
+    sa.UniqueConstraint('invite_code', name=op.f('uq_rooms_invite_code'))
     )
     op.create_table('focus_sessions',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('room_id', sa.Uuid(), nullable=False),
+    sa.Column('duration_minutes', sa.Integer(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_completed', sa.Boolean(), nullable=False),
     sa.Column('started_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('ended_at', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('is_completed', sa.Boolean(), nullable=False),
-    sa.ForeignKeyConstraint(['room_id'], ['rooms.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['room_id'], ['rooms.id'], name=op.f('fk_focus_sessions_room_id_rooms'), ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_focus_sessions'))
     )
     op.create_table('session_participants',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('session_id', sa.Uuid(), nullable=False),
     sa.Column('user_id', sa.Uuid(), nullable=False),
     sa.Column('earned_xp', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['session_id'], ['focus_sessions.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['session_id'], ['focus_sessions.id'], name=op.f('fk_session_participants_session_id_focus_sessions'), ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name=op.f('fk_session_participants_user_id_users'), ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', name=op.f('pk_session_participants'))
     )
     # ### end Alembic commands ###
 

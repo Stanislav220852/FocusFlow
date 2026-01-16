@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.models.user import User
-from src.schemas.user import UserCreate, UserRead,UserDelete
+from src.schemas.user import UserCreate, UserRead
 from src.api.dependencies import get_current_user
 from fastapi.security import OAuth2PasswordRequestForm 
 from src.services.user_services import UserService
 from src.api.dependencies import DBSessionDep,CurrentUserDep
-
+from typing import List
+from uuid import UUID
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
 
