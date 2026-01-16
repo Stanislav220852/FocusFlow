@@ -41,7 +41,7 @@ async def list_user(
     limit: int = Query(20, ge=1, le=100),
     offset: int = Query(0, ge=0)
 ):
-    return await UserService.list_user(db, limit, offset)
+    return await UserService.list_users(db, limit, offset)
 
 @user_router.get("/{user_id}",response_model=UserRead)
 async def get_user(

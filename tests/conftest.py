@@ -11,19 +11,11 @@ async def ac():
 
 @pytest.fixture(scope= "function")
 async def token(ac:AsyncClient) -> str:
-    unique_id = uuid.uuid4().hex[:6]
-    unique_email = f"user_{unique_id}@gmail.com"
-    unique_username = f"test_user_{unique_id}" 
+    
     login_password = "Fish123@"
     login_username = "Stas"
    
    
-
-    await ac.post("/users/register",json = {
-        "username": unique_username,
-        "email": unique_email,
-        "password": login_password
-    })
     
 
     login = await ac.post("/users/login",data = {
