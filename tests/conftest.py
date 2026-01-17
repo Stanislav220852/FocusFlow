@@ -16,14 +16,17 @@ async def token(ac:AsyncClient) -> str:
     login_username = "Stas"
    
    
-    
-
     login = await ac.post("/users/login",data = {
         "username": login_username,
         "password": login_password
     })
     assert login.status_code == 200
     return login.json()["access_token"]
+
+
+
+
+
   
     
 

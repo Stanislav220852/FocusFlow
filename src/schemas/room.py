@@ -10,6 +10,7 @@ class RoomCreate(BaseModel):
     work_duration: int = Field(25, ge=5, le=120)
     break_duration: int = Field(5, ge=1, le=30)
     is_private: bool = False
+    
 
 class RoomRead(BaseModel):
     id: UUID

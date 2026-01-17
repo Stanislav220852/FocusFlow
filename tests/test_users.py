@@ -28,13 +28,10 @@ async def test_get_me(ac:AsyncClient,token:str):
     headers = {"Authorization": f"Bearer {token}"}
     response = await ac.get("/users/me", headers=headers)
     assert response.status_code == 200
-    data = response.json()
-    print(data)
-
-
-@pytest.mark.asyncio
-async def test_list_users(ac:AsyncClient):
-    response = await ac.get("/users/list_users",params={"limit": 10, "offset": 0})
+    user_id = response.json()["id"]
+    get_user = await ac.get("/users/{user_id}")
     assert response.status_code == 200
-    
+
+
+
 
